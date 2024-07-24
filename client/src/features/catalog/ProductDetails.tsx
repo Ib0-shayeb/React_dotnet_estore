@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import agent from "../../app/api/agent";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 import NotFound from "../../app/errors/NotFound";
 
 export default function ProductDetails() {
@@ -12,12 +13,11 @@ export default function ProductDetails() {
 
     useEffect(() => {
         id && agent.Catalog.details(parseInt(id))
-        .then(response => setProduct(response.data))
+        .then(response => {setProduct(response)})
         .catch(error => console.log(error))
         .finally(() => setLoading(false));
     }, [id])
-
-    if(loading) return <h3>Loading...</h3>
+    if(loading) return <LoadingComponent message="Loading item details..."/>
     if(!product) return <NotFound/>
     return(
         <Grid container spacing={6}>
